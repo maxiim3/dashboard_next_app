@@ -3,9 +3,9 @@ import {API_PUBLIC_KEY, BASE_URL, COLLECTION_ID} from "@/app/env.variables"
 import {mockedData} from "@/app/mockedData"
 
 function dataExtractor(data: Data): {photo: Photo; photograph: Photograph} {
-	console.log("Hi")
+	// console.log("Hi")
 
-	console.log(data)
+	// console.log(data)
 	const photo = new Photo(data)
 	const photograph = new Photograph(data.user)
 
