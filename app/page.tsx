@@ -3,9 +3,55 @@ import {fetchData} from "@/app/handlers"
 import {notFound} from "next/navigation"
 import React, {Suspense} from "react"
 import Link from "next/link"
+import {tursoClient} from "@/lib/tursoClient"
+import {Visitors} from "@/lib/schemas"
+
+async function getVisitors(month?:string) {
+	"use server"
+	try {
+		const res = await tursoClient().execute(`select * from visitors where month=\"${month}\";`)
+        
+		return {
+			visitors: res.rows[0] as unknown as Visitors,
+		}
+	} catch (error) {
+		console.error(error)
+		return {
+			visitors: {} as Visitors,
+		}
+	}
+}
+
+function getTodaysDate() {
+	const today = new Date()
+	const isoDate = today.toISOString().split("T")
+	return `${isoDate[0]} ${isoDate[1].split(".")[0]}`
+}
+
+async function updateVisitors() {
+	try {
+
+		const query = `update visitors set counter=counter+1 where month="2024-01";`
+		const res = await tursoClient().execute(query)
+		// return {
+		console.log(res.rows)
+		// 	visitors: res.rows as unknown as Visitors[],
+		// }
+	} catch (error) {
+		console.error(error)
+		// return {
+		// 	visitors: [],
+		// }
+	}
+}
+
 
 export default async function Home() {
 	const result = await fetchData()
+    await updateVisitors()
+    const {visitors} = await getVisitors("2024-01")!
+
+console.log("HOME : ", visitors);
 
 	if (!result) {
 		notFound()
@@ -27,6 +73,7 @@ export default async function Home() {
 						alt={photo.alt_description}
 					/>
 				</figure>
+                <div className='bg-slate-400/50 text-info-500 p-8'>Visitors: {visitors.counter}</div>
 				<aside
 					id="information"
 					className={
