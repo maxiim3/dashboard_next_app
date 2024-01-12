@@ -41,7 +41,7 @@ export class Photograph {
     profilPage: string;
 
     constructor(user: Data["user"]) {
-        console.log(user);
+        // console.log(user);
         this.name = user.name;
         this.portfolio = user?.portfolio_url;
         this.profilPage = user.links.html;
